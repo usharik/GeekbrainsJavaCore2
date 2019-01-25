@@ -2,10 +2,7 @@ package ru.geekbrains.classes;
 
 import ru.geekbrains.classes.animals.Cat;
 import ru.geekbrains.classes.animals.Dog;
-import ru.geekbrains.classes.obstacles.Cross;
-import ru.geekbrains.classes.obstacles.Obstacle;
-import ru.geekbrains.classes.obstacles.Wall;
-import ru.geekbrains.classes.obstacles.Water;
+import ru.geekbrains.classes.obstacles.*;
 
 public class Application {
 
@@ -23,18 +20,10 @@ public class Application {
                 new Water(7)
         };
 
-        for (Participant participant : participants) {
-            for (Obstacle obstacle : obstacles) {
-                obstacle.doIt(participant);
-                if (!participant.isOnDistance()) {
-                    break;
-                }
-            }
-        }
+        Course course = new Course(obstacles);
+        Team team = new Team("Super team", participants);
+        course.doIt(team);
 
-        System.out.println("Итоги:");
-        for (Participant participant : participants) {
-            System.out.println(participant);
-        }
+        team.getResults();
     }
 }
