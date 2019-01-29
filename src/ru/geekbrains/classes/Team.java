@@ -6,7 +6,7 @@ public class Team {
 
     private final Participant[] participants;
 
-    public Team(String name, Participant[] participants) {
+    public Team(String name, Participant ...participants) {
         this.name = name;
         this.participants = participants;
     }
