@@ -1,4 +1,4 @@
-package ru.geekbrains.classes.enums;
+package ru.geekbrains.lesson1.enums;
 
 public final class OldColor {
 

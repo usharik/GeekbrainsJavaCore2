@@ -1,7 +1,7 @@
-package ru.geekbrains.classes.obstacles;
+package ru.geekbrains.lesson1.obstacles;
 
-import ru.geekbrains.classes.Participant;
-import ru.geekbrains.classes.Team;
+import ru.geekbrains.lesson1.Participant;
+import ru.geekbrains.lesson1.Team;
 
 public class Course {
 

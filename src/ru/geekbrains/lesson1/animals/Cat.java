@@ -1,6 +1,4 @@
-package ru.geekbrains.classes.animals;
-
-import ru.geekbrains.classes.animals.Animal;
+package ru.geekbrains.lesson1.animals;
 
 public class Cat extends Animal {
 

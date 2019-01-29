@@ -1,6 +1,6 @@
-package ru.geekbrains.classes.animals;
+package ru.geekbrains.lesson1.animals;
 
-import ru.geekbrains.classes.Participant;
+import ru.geekbrains.lesson1.Participant;
 
 public abstract class Animal implements Participant {
 

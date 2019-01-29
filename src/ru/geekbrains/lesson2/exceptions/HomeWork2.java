@@ -1,4 +1,4 @@
-package ru.geekbrains.classes.exceptions;
+package ru.geekbrains.lesson2.exceptions;
 
 public class HomeWork2 {
 

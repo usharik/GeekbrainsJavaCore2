@@ -1,7 +1,6 @@
-package ru.geekbrains.classes.obstacles;
+package ru.geekbrains.lesson1.obstacles;
 
-import ru.geekbrains.classes.Participant;
-import ru.geekbrains.classes.animals.Animal;
+import ru.geekbrains.lesson1.Participant;
 
 public class Cross extends Obstacle {
 

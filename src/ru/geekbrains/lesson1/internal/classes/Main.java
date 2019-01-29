@@ -1,6 +1,6 @@
-package ru.geekbrains.classes.internal;
+package ru.geekbrains.lesson1.internal.classes;
 
-import ru.geekbrains.classes.Participant;
+import ru.geekbrains.lesson1.Participant;
 
 public class Main {
 

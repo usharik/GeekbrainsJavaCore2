@@ -1,4 +1,4 @@
-package ru.geekbrains.classes;
+package ru.geekbrains.lesson1;
 
 public class Robot implements Participant {
 
