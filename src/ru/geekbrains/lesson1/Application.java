@@ -2,7 +2,6 @@ package ru.geekbrains.lesson1;
 
 import ru.geekbrains.lesson1.animals.Cat;
 import ru.geekbrains.lesson1.animals.Dog;
-import ru.geekbrains.lesson1.classes.obstacles.*;
 import ru.geekbrains.lesson1.obstacles.Course;
 import ru.geekbrains.lesson1.obstacles.Cross;
 import ru.geekbrains.lesson1.obstacles.Wall;
