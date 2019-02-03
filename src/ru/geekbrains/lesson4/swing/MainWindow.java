@@ -1,4 +1,4 @@
-package ru.geekbrains.lesson4;
+package ru.geekbrains.lesson4.swing;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,12 +38,7 @@ public class MainWindow extends JFrame {
         button.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String text = textField.getText();
-                if (text == null || text.isEmpty()) {
-                    return;
-                }
-                listModel.add(listModel.size(), new Message("user", text));
-                list.ensureIndexIsVisible(listModel.size() - 1);
+                submitMessage("user", textField.getText());
                 textField.setText(null);
                 textField.requestFocus();
             }
@@ -64,5 +59,13 @@ public class MainWindow extends JFrame {
         add(panel, BorderLayout.SOUTH);
 
         setVisible(true);
+    }
+
+    public void submitMessage(String user, String message) {
+        if (message == null || message.isEmpty()) {
+            return;
+        }
+        listModel.add(listModel.size(), new Message(user, message));
+        list.ensureIndexIsVisible(listModel.size() - 1);
     }
 }

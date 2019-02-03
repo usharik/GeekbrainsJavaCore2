@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.geekbrains.lesson4.javafx.controller.Controller">
+    <bottom>
+        <BorderPane prefHeight="39.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+            <right>
+                <Button fx:id="btSendMessage" mnemonicParsing="false" onMouseClicked="#onSendMessageClicked" text="Button" BorderPane.alignment="CENTER" />
+            </right>
+            <center>
+                <TextField fx:id="tfMessage" BorderPane.alignment="CENTER" />
+            </center>
+        </BorderPane>
+    </bottom>
+    <center>
+        <ListView fx:id="lvMessages" prefHeight="361.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+    </center>
+</BorderPane>
