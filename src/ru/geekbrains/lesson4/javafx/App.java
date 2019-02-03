@@ -22,7 +22,7 @@ public class App extends Application {
         Controller ctrl = loader.getController();
         ctrl.setPrimaryStage(primaryStage);
 
-        primaryStage.setTitle("ParsLog");
+        primaryStage.setTitle("Network Chat");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }

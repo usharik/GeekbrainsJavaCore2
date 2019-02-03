@@ -5,9 +5,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import ru.geekbrains.lesson4.swing.Message;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -25,12 +28,18 @@ public class Controller implements Initializable {
 
     Stage primaryStage;
 
-    private ObservableList<String> messageList;
+    private ObservableList<Message> messageList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         messageList = FXCollections.observableArrayList();
         lvMessages.setItems(messageList);
+        lvMessages.setCellFactory(new Callback<ListView, ListCell>() {
+            @Override
+            public ListCell call(ListView param) {
+                return new MessageCellController();
+            }
+        });
     }
 
     public void setPrimaryStage(Stage primaryStage) {
@@ -40,7 +49,9 @@ public class Controller implements Initializable {
     public void onSendMessageClicked() {
         String text = tfMessage.getText();
         if (text != null && !text.isEmpty()) {
-            messageList.add(text);
+            messageList.add(new Message("user", text));
+            tfMessage.clear();
+            tfMessage.requestFocus();
         }
     }
 }
