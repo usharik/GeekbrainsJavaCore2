@@ -5,8 +5,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.IOException;
 
-public class MainWindow extends JFrame {
+public class MainWindow extends JFrame implements MessageSender {
 
     private JTextField textField;
     private JButton button;
@@ -14,6 +15,8 @@ public class MainWindow extends JFrame {
     private JList<Message> list;
     private DefaultListModel<Message> listModel;
     private JPanel panel;
+
+    private Network network;
 
     public MainWindow() {
         setTitle("Сетевой чат");
@@ -38,9 +41,12 @@ public class MainWindow extends JFrame {
         button.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                submitMessage("user", textField.getText());
+                String text = textField.getText();
+                submitMessage("user", text);
                 textField.setText(null);
                 textField.requestFocus();
+
+                network.sendMessage(text);
             }
         });
 
@@ -58,14 +64,23 @@ public class MainWindow extends JFrame {
 
         add(panel, BorderLayout.SOUTH);
 
+        try {
+            network = new Network("localhost", 7777, this);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+
         setVisible(true);
     }
 
+    @Override
     public void submitMessage(String user, String message) {
         if (message == null || message.isEmpty()) {
             return;
         }
-        listModel.add(listModel.size(), new Message(user, message));
+        Message msg = new Message(user, message);
+        listModel.add(listModel.size(), msg);
         list.ensureIndexIsVisible(listModel.size() - 1);
     }
 }
