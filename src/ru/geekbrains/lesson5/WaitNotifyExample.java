@@ -9,14 +9,14 @@ public class WaitNotifyExample {
 
     public synchronized String get() throws InterruptedException {
         if (deque.isEmpty()) {
-            wait();
+            this.wait();
         }
         return deque.pollLast();
     }
 
     public synchronized void add(String str) {
         deque.add(str);
-        notifyAll();
+        this.notifyAll();
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -80,6 +80,27 @@ public class WaitNotifyExample {
             }
         });
         thr3.start();
+
+    }
+
+    private final Object monitor = new Object();
+
+    private void example() throws InterruptedException {
+        System.out.println("Some code");
+
+        synchronized (monitor) {
+            monitor.wait();
+        }
+    }
+
+    private static void example1() throws InterruptedException {
+        synchronized (WaitNotifyExample.class) {
+            WaitNotifyExample.class.wait();
+        }
+    }
+
+    // синхронизирован по WaitNotifyExample.class
+    private static synchronized void example2() {
 
     }
 
