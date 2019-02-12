@@ -54,7 +54,12 @@ public class Network implements Closeable {
 
     @Override
     public void close() throws IOException {
-        receiver.interrupt();
         socket.close();
+        receiver.interrupt();
+        try {
+            receiver.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

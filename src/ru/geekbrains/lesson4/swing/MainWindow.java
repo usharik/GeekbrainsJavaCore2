@@ -2,10 +2,9 @@ package ru.geekbrains.lesson4.swing;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.*;
 import java.io.IOException;
+import java.net.ConnectException;
 
 public class MainWindow extends JFrame implements MessageSender {
 
@@ -66,10 +65,27 @@ public class MainWindow extends JFrame implements MessageSender {
 
         try {
             network = new Network("localhost", 7777, this);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (ConnectException ex) {
+            ex.printStackTrace();
+            System.exit(-1);
+        } catch (IOException ex) {
+            ex.printStackTrace();
             System.exit(-1);
         }
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try {
+                    if (network != null) {
+                        network.close();
+                    }
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                super.windowClosing(e);
+            }
+        });
 
         setVisible(true);
     }
