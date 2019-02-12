@@ -19,12 +19,17 @@ public class ChatServer {
 
     private static final Pattern AUTH_PATTERN = Pattern.compile("^/auth (.+) (.+)$");
 
-    private static AuthService authService = new AuthServiceImpl();
+    private AuthService authService = new AuthServiceImpl();
 
-    private static Map<String, ClientHandler> clientHandlerMap = Collections.synchronizedMap(new HashMap<>());
+    private Map<String, ClientHandler> clientHandlerMap = Collections.synchronizedMap(new HashMap<>());
 
     public static void main(String[] args) {
-        try (ServerSocket serverSocket = new ServerSocket(7777)) {
+        ChatServer chatServer = new ChatServer();
+        chatServer.start(7777);
+    }
+
+    public void start(int port) {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Server started!");
             while (true) {
                 Socket socket = serverSocket.accept();
@@ -39,7 +44,7 @@ public class ChatServer {
                         String username = matcher.group(1);
                         String password = matcher.group(2);
                         if (authService.authUser(username, password)) {
-                            clientHandlerMap.put(username, new ClientHandler(username, socket));
+                            clientHandlerMap.put(username, new ClientHandler(username, socket, this));
                             out.writeUTF("/auth successful");
                             out.flush();
                             System.out.printf("Authorization for user %s successful%n", username);
