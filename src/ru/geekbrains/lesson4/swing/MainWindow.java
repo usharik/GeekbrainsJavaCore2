@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.net.ConnectException;
 
 public class MainWindow extends JFrame implements MessageSender {
 
@@ -41,7 +40,7 @@ public class MainWindow extends JFrame implements MessageSender {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String text = textField.getText();
-                submitMessage("user", text);
+                submitMessage(network.getUsername(), text);
                 textField.setText(null);
                 textField.requestFocus();
 
@@ -63,16 +62,6 @@ public class MainWindow extends JFrame implements MessageSender {
 
         add(panel, BorderLayout.SOUTH);
 
-        try {
-            network = new Network("localhost", 7777, this);
-        } catch (ConnectException ex) {
-            ex.printStackTrace();
-            System.exit(-1);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            System.exit(-1);
-        }
-
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -88,6 +77,15 @@ public class MainWindow extends JFrame implements MessageSender {
         });
 
         setVisible(true);
+
+        LoginDialog loginDialog = new LoginDialog(this);
+        loginDialog.setVisible(true);
+
+        if (!loginDialog.isAuthSuccessful()) {
+            System.exit(0);
+        }
+        network = loginDialog.getNetwork();
+        setTitle("Сетевой чат. Пользователь " + network.getUsername());
     }
 
     @Override

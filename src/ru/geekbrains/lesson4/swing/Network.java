@@ -9,11 +9,15 @@ import java.net.Socket;
 
 public class Network implements Closeable {
 
+    private static final String AUTH_PATTERN = "/auth %s %s";
+
     private final Socket socket;
     private final DataOutputStream out;
     private final DataInputStream in;
     private final MessageSender messageSender;
     private final Thread receiver;
+
+    private String username;
 
     public Network(String hostName, int port, MessageSender messageSender) throws IOException {
         this.socket = new Socket(hostName, port);
@@ -40,7 +44,7 @@ public class Network implements Closeable {
                 }
             }
         });
-        receiver.start();
+
     }
 
     public void sendMessage(String msg) {
@@ -50,6 +54,25 @@ public class Network implements Closeable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void authorize(String username, String password) {
+        try {
+            out.writeUTF(String.format(AUTH_PATTERN, username, password));
+            String response = in.readUTF();
+            if (response.equals("/auth successful")) {
+                this.username = username;
+                receiver.start();
+            } else {
+                throw new AuthException("");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     @Override
