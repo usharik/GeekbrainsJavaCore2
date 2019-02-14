@@ -6,11 +6,14 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Network implements Closeable {
 
     private static final String AUTH_PATTERN = "/auth %s %s";
     private static final String MESSAGE_PATTERN = "/w %s %s";
+    private static final Pattern MESSAGE_PARS_PATTERN = Pattern.compile("^/w (\\w+) (.+)", Pattern.MULTILINE);
 
     private final Socket socket;
     private final DataOutputStream out;
@@ -40,8 +43,11 @@ public class Network implements Closeable {
                             @Override
                             public void run() {
                                 System.out.println("New message " + text);
-                                Message msg = new Message("server", username,  text);
-                                messageSender.submitMessage(msg);
+                                Matcher matcher = MESSAGE_PARS_PATTERN.matcher(text);
+                                if (matcher.matches()) {
+                                    Message msg = new Message(matcher.group(1), username,  matcher.group(2));
+                                    messageSender.submitMessage(msg);
+                                }
                             }
                         });
                     } catch (IOException e) {
@@ -53,8 +59,7 @@ public class Network implements Closeable {
     }
 
     public void sendMessageToUser(Message message) {
-        // TODO здесь нужно сформировать личное сообщение в понятном для сервера формате
-        sendMessage(message.getText());
+        sendMessage(String.format(MESSAGE_PATTERN, message.getUserTo(), message.getText()));
     }
 
     private void sendMessage(String msg) {

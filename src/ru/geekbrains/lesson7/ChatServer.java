@@ -9,19 +9,18 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ChatServer {
 
-    private static final Pattern AUTH_PATTERN = Pattern.compile("^/w (\\w+) (.+)", Pattern.MULTILINE);
+    private static final Pattern AUTH_PATTERN = Pattern.compile("^/auth (\\w+) (\\w+)$");
 
     private AuthService authService = new AuthServiceImpl();
 
-    private Map<String, ClientHandler> clientHandlerMap = Collections.synchronizedMap(new HashMap<>());
+    private Map<String, ClientHandler> clientHandlerMap = new ConcurrentHashMap<>();
 
     public static void main(String[] args) {
         ChatServer chatServer = new ChatServer();
@@ -69,7 +68,14 @@ public class ChatServer {
         }
     }
 
-    public void sendMessage(String userTo, String userFrom, String msg) {
-        // TODO реализовать отправку сообщения пользователю с именем username
+    public void sendMessage(String userTo, String userFrom, String msg) throws IOException {
+        ClientHandler clientHandler = clientHandlerMap.get(userTo);
+        if (clientHandler != null) {
+            clientHandler.sendMessage(userFrom, msg);
+        }
+    }
+
+    public void unsubscribe(ClientHandler clientHandler) {
+        clientHandlerMap.remove(clientHandler.getUsername());
     }
 }
