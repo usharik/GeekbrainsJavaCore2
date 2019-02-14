@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 public class ChatServer {
 
-    private static final Pattern AUTH_PATTERN = Pattern.compile("^/w (\\w+) (.+)", Pattern.MULTILINE);
+    private static final Pattern AUTH_PATTERN = Pattern.compile("^/auth (\\w+) (\\w+)$");
 
     private AuthService authService = new AuthServiceImpl();
 
