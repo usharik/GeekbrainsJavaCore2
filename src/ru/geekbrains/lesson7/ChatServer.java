@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 public class ChatServer {
 
-    private static final Pattern AUTH_PATTERN = Pattern.compile("^/auth (.+) (.+)$");
+    private static final Pattern AUTH_PATTERN = Pattern.compile("^/w (\\w+) (.+)", Pattern.MULTILINE);
 
     private AuthService authService = new AuthServiceImpl();
 
@@ -69,7 +69,7 @@ public class ChatServer {
         }
     }
 
-    public void sendMessage(String username, String msg) {
+    public void sendMessage(String userTo, String userFrom, String msg) {
         // TODO реализовать отправку сообщения пользователю с именем username
     }
 }
