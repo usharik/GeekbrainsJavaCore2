@@ -10,6 +10,7 @@ import java.net.Socket;
 public class Network implements Closeable {
 
     private static final String AUTH_PATTERN = "/auth %s %s";
+    private static final String MESSAGE_PATTERN = "/w %s %s";
 
     private final Socket socket;
     private final DataOutputStream out;
@@ -25,29 +26,38 @@ public class Network implements Closeable {
         this.in = new DataInputStream(socket.getInputStream());
         this.messageSender = messageSender;
 
-        this.receiver = new Thread(new Runnable() {
+        this.receiver = createReceiverThread();
+    }
+
+    private Thread createReceiverThread() {
+        return new Thread(new Runnable() {
             @Override
             public void run() {
                 while (!Thread.currentThread().isInterrupted()) {
                     try {
-                        String msg = in.readUTF();
+                        String text = in.readUTF();
                         SwingUtilities.invokeLater(new Runnable() {
-                                                       @Override
-                                                       public void run() {
-                                                           System.out.println("New message " + msg);
-                                                           messageSender.submitMessage("server", msg);
-                                                       }
-                                                   });
+                            @Override
+                            public void run() {
+                                System.out.println("New message " + text);
+                                Message msg = new Message("server", username,  text);
+                                messageSender.submitMessage(msg);
+                            }
+                        });
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }
         });
-
     }
 
-    public void sendMessage(String msg) {
+    public void sendMessageToUser(Message message) {
+        // TODO здесь нужно сформировать личное сообщение в понятном для сервера формате
+        sendMessage(message.getText());
+    }
+
+    private void sendMessage(String msg) {
         try {
             out.writeUTF(msg);
             out.flush();
@@ -64,7 +74,7 @@ public class Network implements Closeable {
                 this.username = username;
                 receiver.start();
             } else {
-                throw new AuthException("");
+                throw new AuthException();
             }
         } catch (IOException e) {
             e.printStackTrace();

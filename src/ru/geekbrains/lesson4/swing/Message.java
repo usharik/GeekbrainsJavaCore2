@@ -4,24 +4,31 @@ import java.time.LocalDate;
 
 public class Message {
 
-    private String userName;
+    private String userFrom;
 
-    private String message;
+    private String userTo;
+
+    private String text;
 
     private LocalDate date;
 
-    public Message(String userName, String message) {
-        this.userName = userName;
-        this.message = message;
+    public Message(String userFrom, String userTo, String text) {
+        this.userFrom = userFrom;
+        this.userTo = userTo;
+        this.text = text;
         this.date = LocalDate.now();
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUserFrom() {
+        return userFrom;
     }
 
-    public String getMessage() {
-        return message;
+    public String getUserTo() {
+        return userTo;
+    }
+
+    public String getText() {
+        return text;
     }
 
     public LocalDate getDate() {

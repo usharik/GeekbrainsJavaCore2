@@ -49,7 +49,7 @@ public class Controller implements Initializable {
     public void onSendMessageClicked() {
         String text = tfMessage.getText();
         if (text != null && !text.isEmpty()) {
-            messageList.add(new Message("user", text));
+            messageList.add(new Message("user", "user", text));
             tfMessage.clear();
             tfMessage.requestFocus();
         }

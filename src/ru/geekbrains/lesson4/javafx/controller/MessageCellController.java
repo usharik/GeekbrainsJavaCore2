@@ -44,8 +44,8 @@ public class MessageCellController extends ListCell<Message> {
                 }
             }
 
-            lbUserName.setText(msg.getUserName());
-            lbMessage.setText(msg.getMessage());
+            lbUserName.setText(msg.getUserFrom());
+            lbMessage.setText(msg.getText());
             setText(null);
             setGraphic(cellLayout);
         }

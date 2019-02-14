@@ -10,8 +10,9 @@ public class MainWindow extends JFrame implements MessageSender {
     private JTextField textField;
     private JButton button;
     private JScrollPane scrollPane;
-    private JList<Message> list;
-    private DefaultListModel<Message> listModel;
+    private JList<Message> messageList;
+    private DefaultListModel<Message> messageListModel;
+    private JList<String> userList;
     private JPanel panel;
 
     private Network network;
@@ -23,35 +24,58 @@ public class MainWindow extends JFrame implements MessageSender {
 
         setLayout(new BorderLayout());   // выбор компоновщика элементов
 
-        listModel = new DefaultListModel<>();
-        list = new JList<>(listModel);
-        list.setCellRenderer(new MessageCellRenderer());
+        messageListModel = new DefaultListModel<>();
+        messageList = new JList<>(messageListModel);
+        messageList.setCellRenderer(new MessageCellRenderer());
 
         panel = new JPanel();
         panel.setLayout(new BorderLayout());
-        panel.add(list, BorderLayout.SOUTH);
-        panel.setBackground(list.getBackground());
+        panel.add(messageList, BorderLayout.SOUTH);
+        panel.setBackground(messageList.getBackground());
         scrollPane = new JScrollPane(panel);
         add(scrollPane, BorderLayout.CENTER);
 
+        userList = new JList<>();
+        userList.setListData(new String[] {"ivan", "petr", "julia"}); // Для простоты, пока фиксированный список имен пользователей
+        userList.setPreferredSize(new Dimension(100, 0));
+        add(userList, BorderLayout.WEST);
+
         textField = new JTextField();
-        button = new JButton("Send");
+        button = new JButton("Отправить");
         button.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String userTo = userList.getSelectedValue();
+                if (userTo == null) {
+                    JOptionPane.showMessageDialog(MainWindow.this,
+                            "Не указан получатель",
+                            "Отправка сообщения",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 String text = textField.getText();
-                submitMessage(network.getUsername(), text);
+                if (text == null || text.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(MainWindow.this,
+                            "Нельзя отправить пустое сообщение",
+                            "Отправка сообщения",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                Message msg = new Message(network.getUsername(), userTo, text.trim());
+                submitMessage(msg);
                 textField.setText(null);
                 textField.requestFocus();
 
-                network.sendMessage(text);
+                network.sendMessageToUser(msg);
             }
         });
 
         this.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent evt) {
-                list.ensureIndexIsVisible(listModel.size() - 1);
+                messageList.ensureIndexIsVisible(messageListModel.size() - 1);
             }
         });
 
@@ -89,12 +113,8 @@ public class MainWindow extends JFrame implements MessageSender {
     }
 
     @Override
-    public void submitMessage(String user, String message) {
-        if (message == null || message.isEmpty()) {
-            return;
-        }
-        Message msg = new Message(user, message);
-        listModel.add(listModel.size(), msg);
-        list.ensureIndexIsVisible(listModel.size() - 1);
+    public void submitMessage(Message msg) {
+        messageListModel.add(messageListModel.size(), msg);
+        messageList.ensureIndexIsVisible(messageListModel.size() - 1);
     }
 }
