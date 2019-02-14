@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class ClientHandler {
 
-    private static final Pattern MESSAGE_PATTERN = Pattern.compile("^/w (.+) (.+)$");
+    private static final Pattern MESSAGE_PATTERN = Pattern.compile("^/w (\\w+) (.+)", Pattern.MULTILINE);
     private final Thread handleThread;
     private final DataInputStream inp;
     private final DataOutputStream out;
