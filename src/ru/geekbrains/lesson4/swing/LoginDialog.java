@@ -5,7 +5,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
+
 
 public class LoginDialog extends JDialog {
 
@@ -16,12 +16,15 @@ public class LoginDialog extends JDialog {
     private JButton btnLogin;
     private JButton btnCancel;
 
-    private Network network;
+    private final Network network;
 
-    public LoginDialog(Frame parent) {
+    private boolean connected;
+
+    public LoginDialog(Frame parent, Network network) {
         super(parent, "Login", true);
 
-        network = null;
+        this.network = network;
+        this.connected = false;
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();
@@ -62,15 +65,8 @@ public class LoginDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    network = new Network("localhost", 7777, (MessageSender) parent);
                     network.authorize(tfUsername.getText(), String.valueOf(pfPassword.getPassword()));
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(LoginDialog.this,
-                            "Ошибка сети",
-                            "Авторизация",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
+                    connected = true;
                 } catch (AuthException ex) {
                     JOptionPane.showMessageDialog(LoginDialog.this,
                             "Ошибка авторизации",
@@ -98,11 +94,7 @@ public class LoginDialog extends JDialog {
         setLocationRelativeTo(parent);
     }
 
-    public Network getNetwork() {
-        return network;
-    }
-
-    public boolean isAuthSuccessful() {
-        return network != null;
+    public boolean isConnected() {
+        return connected;
     }
 }

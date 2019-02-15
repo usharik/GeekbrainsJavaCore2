@@ -102,13 +102,35 @@ public class MainWindow extends JFrame implements MessageSender {
 
         setVisible(true);
 
-        LoginDialog loginDialog = new LoginDialog(this);
+        boolean connected = false;
+
+        while (!connected) {
+            try {
+                network = new Network("localhost", 7777, this);
+                connected = true;
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                int res = JOptionPane.showOptionDialog(new JFrame(), "Ошибка сети.",
+                        "Подключение", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+                        null, new Object[]{"Повторить", "Выход"}, JOptionPane.YES_OPTION);
+                switch (res) {
+                    case JOptionPane.YES_OPTION:
+                        continue;
+                    case JOptionPane.NO_OPTION:
+                        System.exit(0);
+                    default:
+                        System.exit(0);
+                }
+            }
+        }
+
+        LoginDialog loginDialog = new LoginDialog(this, network);
         loginDialog.setVisible(true);
 
-        if (!loginDialog.isAuthSuccessful()) {
+        if (!loginDialog.isConnected()) {
             System.exit(0);
         }
-        network = loginDialog.getNetwork();
+
         setTitle("Сетевой чат. Пользователь " + network.getUsername());
     }
 

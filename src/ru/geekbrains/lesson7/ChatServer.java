@@ -69,7 +69,12 @@ public class ChatServer {
         }
     }
 
-    public void sendMessage(String userTo, String userFrom, String msg) {
-        // TODO реализовать отправку сообщения пользователю с именем username
+    public void sendMessage(String userTo, String userFrom, String msg) throws IOException {
+        ClientHandler userToClientHandler = clientHandlerMap.get(userTo);
+        if (userToClientHandler != null) {
+            userToClientHandler.sendMessage(userFrom, msg);
+        } else {
+            System.out.printf("User %s not found. Message from %s is lost.%n", userTo, userFrom);
+        }
     }
 }
