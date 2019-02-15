@@ -15,18 +15,19 @@ public class Network implements Closeable {
     private static final String MESSAGE_SEND_PATTERN = "/w %s %s";
     private static final Pattern MESSAGE_PATTERN = Pattern.compile("^/w (\\w+) (.+)", Pattern.MULTILINE);
 
-    private final Socket socket;
-    private final DataOutputStream out;
-    private final DataInputStream in;
+    private Socket socket;
+    private DataOutputStream out;
+    private DataInputStream in;
     private final MessageSender messageSender;
     private final Thread receiver;
 
     private String username;
+    private final String hostName;
+    private final int port;
 
-    public Network(String hostName, int port, MessageSender messageSender) throws IOException {
-        this.socket = new Socket(hostName, port);
-        this.out = new DataOutputStream(socket.getOutputStream());
-        this.in = new DataInputStream(socket.getInputStream());
+    public Network(String hostName, int port, MessageSender messageSender) {
+        this.hostName = hostName;
+        this.port = port;
         this.messageSender = messageSender;
 
         this.receiver = createReceiverThread();
@@ -72,18 +73,18 @@ public class Network implements Closeable {
         }
     }
 
-    public void authorize(String username, String password) {
-        try {
-            out.writeUTF(String.format(AUTH_PATTERN, username, password));
-            String response = in.readUTF();
-            if (response.equals("/auth successful")) {
-                this.username = username;
-                receiver.start();
-            } else {
-                throw new AuthException();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void authorize(String username, String password) throws IOException {
+        socket = new Socket(hostName, port);
+        out = new DataOutputStream(socket.getOutputStream());
+        in = new DataInputStream(socket.getInputStream());
+
+        out.writeUTF(String.format(AUTH_PATTERN, username, password));
+        String response = in.readUTF();
+        if (response.equals("/auth successful")) {
+            this.username = username;
+            receiver.start();
+        } else {
+            throw new AuthException();
         }
     }
 

@@ -5,6 +5,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 
 public class LoginDialog extends JDialog {
@@ -70,6 +71,12 @@ public class LoginDialog extends JDialog {
                 } catch (AuthException ex) {
                     JOptionPane.showMessageDialog(LoginDialog.this,
                             "Ошибка авторизации",
+                            "Авторизация",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(LoginDialog.this,
+                            "Ошибка сети",
                             "Авторизация",
                             JOptionPane.ERROR_MESSAGE);
                     return;
