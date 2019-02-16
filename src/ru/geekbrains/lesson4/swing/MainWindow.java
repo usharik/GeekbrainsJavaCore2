@@ -3,7 +3,6 @@ package ru.geekbrains.lesson4.swing;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
 
 public class MainWindow extends JFrame implements MessageSender {
 
@@ -37,7 +36,7 @@ public class MainWindow extends JFrame implements MessageSender {
 
         userList = new JList<>();
         // TODO добавить класс Model для userList по аналогии с messageListModel
-        userList.setListData(new String[] {"ivan", "petr", "julia"}); // Для простоты, пока фиксированный список имен пользователей
+        userList.setListData(new String[]{"ivan", "petr", "julia"}); // Для простоты, пока фиксированный список имен пользователей
         userList.setPreferredSize(new Dimension(100, 0));
         add(userList, BorderLayout.WEST);
 
@@ -90,12 +89,8 @@ public class MainWindow extends JFrame implements MessageSender {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                try {
-                    if (network != null) {
-                        network.close();
-                    }
-                } catch (IOException e1) {
-                    e1.printStackTrace();
+                if (network != null) {
+                    network.close();
                 }
                 super.windowClosing(e);
             }
@@ -117,7 +112,12 @@ public class MainWindow extends JFrame implements MessageSender {
 
     @Override
     public void submitMessage(Message msg) {
-        messageListModel.add(messageListModel.size(), msg);
-        messageList.ensureIndexIsVisible(messageListModel.size() - 1);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                messageListModel.add(messageListModel.size(), msg);
+                messageList.ensureIndexIsVisible(messageListModel.size() - 1);
+            }
+        });
     }
 }

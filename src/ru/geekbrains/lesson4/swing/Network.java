@@ -41,24 +41,21 @@ public class Network implements Closeable {
                 while (!Thread.currentThread().isInterrupted()) {
                     try {
                         String text = in.readUTF();
-                        SwingUtilities.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                System.out.println("New message " + text);
-                                Matcher matcher = MESSAGE_PATTERN.matcher(text);
-                                if (matcher.matches()) {
-                                    Message msg = new Message(matcher.group(1), username,
-                                            matcher.group(2));
-                                    messageSender.submitMessage(msg);
-                                } else if (text.startsWith(USER_LIST_PATTERN)) {
-                                    // TODO обновить список подключенных пользователей
-                                }
-                            }
-                        });
+
+                        System.out.println("New message " + text);
+                        Matcher matcher = MESSAGE_PATTERN.matcher(text);
+                        if (matcher.matches()) {
+                            Message msg = new Message(matcher.group(1), username,
+                                    matcher.group(2));
+                            messageSender.submitMessage(msg);
+                        } else if (text.startsWith(USER_LIST_PATTERN)) {
+                            // TODO обновить список подключенных пользователей
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
+                System.out.printf("Network connection is closed for user %s%n", username);
             }
         });
     }
@@ -96,8 +93,12 @@ public class Network implements Closeable {
     }
 
     @Override
-    public void close() throws IOException {
-        socket.close();
+    public void close() {
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         receiver.interrupt();
         try {
             receiver.join();

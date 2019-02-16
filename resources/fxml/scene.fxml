@@ -4,19 +4,48 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.geekbrains.lesson4.javafx.controller.Controller">
-    <bottom>
-        <BorderPane prefHeight="39.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-            <right>
-                <Button fx:id="btSendMessage" mnemonicParsing="false" onMouseClicked="#onSendMessageClicked" text="Button" BorderPane.alignment="CENTER" />
-            </right>
-            <center>
-                <TextField fx:id="tfMessage" BorderPane.alignment="CENTER" />
-            </center>
-        </BorderPane>
-    </bottom>
-    <center>
-        <ListView fx:id="lvMessages" prefHeight="361.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
-    </center>
-</BorderPane>
+
+<AnchorPane fx:controller="ru.geekbrains.lesson4.javafx.controller.Controller" xmlns:fx="http://javafx.com/fxml">
+
+        <VBox AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+
+            <HBox fx:id="authPanel">
+                <TextField HBox.hgrow="ALWAYS" fx:id="loginField" promptText="Логин"/>
+                <PasswordField HBox.hgrow="ALWAYS" fx:id="passField" promptText="Пароль"/>
+                <Button HBox.hgrow="ALWAYS" text="Подключиться" onAction="#sendAuth"/>
+            </HBox>
+
+            <HBox fx:id="msgPanel" VBox.vgrow="ALWAYS">
+                <BorderPane prefHeight="400.0" prefWidth="600.0" HBox.hgrow="ALWAYS"
+                            xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+                    <left>
+                        <ListView fx:id="lvUserList" prefWidth="100.0" BorderPane.alignment="CENTER"/>
+                    </left>
+                    <bottom>
+                        <BorderPane prefHeight="39.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+                            <right>
+                                <Button fx:id="btSendMessage" mnemonicParsing="false"
+                                        onMouseClicked="#onSendMessageClicked"
+                                        text="Button" BorderPane.alignment="CENTER"/>
+                            </right>
+                            <center>
+                                <TextField fx:id="tfMessage" BorderPane.alignment="CENTER"/>
+                            </center>
+                        </BorderPane>
+                    </bottom>
+                    <center>
+                        <ListView fx:id="lvMessages" prefHeight="361.0" prefWidth="600.0"
+                                  BorderPane.alignment="CENTER"/>
+                    </center>
+                </BorderPane>
+            </HBox>
+
+        </VBox>
+
+</AnchorPane>
