@@ -13,6 +13,7 @@ public class ClientHandler {
     private static final Pattern MESSAGE_PATTERN = Pattern.compile("^/w (\\w+) (.+)", Pattern.MULTILINE);
     private static final String MESSAGE_SEND_PATTERN = "/w %s %s";
 
+
     private final Thread handleThread;
     private final DataInputStream inp;
     private final DataOutputStream out;
@@ -51,6 +52,7 @@ public class ClientHandler {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    server.unsubscribeClient(ClientHandler.this);
                 }
             }
         });
@@ -59,5 +61,9 @@ public class ClientHandler {
 
     public void sendMessage(String userTo, String msg) throws IOException {
         out.writeUTF(String.format(MESSAGE_SEND_PATTERN, userTo, msg));
+    }
+
+    public String getUsername() {
+        return username;
     }
 }

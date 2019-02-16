@@ -13,6 +13,7 @@ public class Network implements Closeable {
 
     private static final String AUTH_PATTERN = "/auth %s %s";
     private static final String MESSAGE_SEND_PATTERN = "/w %s %s";
+    private static final String USER_LIST_PATTERN = "/userlist";
     private static final Pattern MESSAGE_PATTERN = Pattern.compile("^/w (\\w+) (.+)", Pattern.MULTILINE);
 
     private Socket socket;
@@ -49,6 +50,8 @@ public class Network implements Closeable {
                                     Message msg = new Message(matcher.group(1), username,
                                             matcher.group(2));
                                     messageSender.submitMessage(msg);
+                                } else if (text.startsWith(USER_LIST_PATTERN)) {
+                                    // TODO обновить список подключенных пользователей
                                 }
                             }
                         });

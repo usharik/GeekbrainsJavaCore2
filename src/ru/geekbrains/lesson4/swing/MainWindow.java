@@ -36,6 +36,7 @@ public class MainWindow extends JFrame implements MessageSender {
         add(scrollPane, BorderLayout.CENTER);
 
         userList = new JList<>();
+        // TODO добавить класс Model для userList по аналогии с messageListModel
         userList.setListData(new String[] {"ivan", "petr", "julia"}); // Для простоты, пока фиксированный список имен пользователей
         userList.setPreferredSize(new Dimension(100, 0));
         add(userList, BorderLayout.WEST);
